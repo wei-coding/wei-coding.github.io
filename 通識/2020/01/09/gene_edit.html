@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://wei-coding.github.io').hostname,
+    root: '/',
+    scheme: 'Mist',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="基因編輯起源：DNA DNA可說是生命的藍圖 若重要位置發生突變，可能產生重大失調，甚至遺傳疾病 想法：避免產生錯誤的蛋白質，直接編輯錯誤的基因 把錯的地方剪掉，補上新的  剪刀哪裡來？目前最好最精準的剪刀是CRISPR，來自細菌的免疫系統  1987年，日本科學家在細菌中發現一段奇怪的規律序列，用途不明 過了很久之後，科學家發現這些序列是用來記錄來犯的病毒！！  細菌的病毒？細菌遇到病毒怎麼可能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基因編輯">
+<meta property="og:url" content="https://wei-coding.github.io/%E9%80%9A%E8%AD%98/2020/01/09/gene_edit.html">
+<meta property="og:site_name" content="小瑋的小小天地">
+<meta property="og:description" content="基因編輯起源：DNA DNA可說是生命的藍圖 若重要位置發生突變，可能產生重大失調，甚至遺傳疾病 想法：避免產生錯誤的蛋白質，直接編輯錯誤的基因 把錯的地方剪掉，補上新的  剪刀哪裡來？目前最好最精準的剪刀是CRISPR，來自細菌的免疫系統  1987年，日本科學家在細菌中發現一段奇怪的規律序列，用途不明 過了很久之後，科學家發現這些序列是用來記錄來犯的病毒！！  細菌的病毒？細菌遇到病毒怎麼可能">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2020-01-09T04:18:07.000Z">
+<meta property="article:modified_time" content="2020-01-09T04:18:07.000Z">
+<meta property="article:author" content="Edward">
+<meta property="article:tag" content="課堂筆記, 生命科學">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wei-coding.github.io/%E9%80%9A%E8%AD%98/2020/01/09/gene_edit.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>基因編輯 | 小瑋的小小天地</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小瑋的小小天地</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">人生得意需盡歡，莫使電腦白空轉</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>歸檔</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://wei-coding.github.io/%E9%80%9A%E8%AD%98/2020/01/09/gene_edit.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Edward">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小瑋的小小天地">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          基因編輯
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2020-01-09 12:18:07" itemprop="dateCreated datePublished" datetime="2020-01-09T12:18:07+08:00">2020-01-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%80%9A%E8%AD%98/" itemprop="url" rel="index">
+                    <span itemprop="name">通識</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="基因編輯"><a href="#基因編輯" class="headerlink" title="基因編輯"></a>基因編輯</h1><h2 id="起源：DNA"><a href="#起源：DNA" class="headerlink" title="起源：DNA"></a>起源：DNA</h2><ul>
+<li>DNA可說是生命的藍圖</li>
+<li>若重要位置發生突變，可能產生重大失調，甚至遺傳疾病</li>
+<li>想法：避免產生錯誤的蛋白質，直接編輯錯誤的基因</li>
+<li>把錯的地方剪掉，補上新的</li>
+</ul>
+<h2 id="剪刀哪裡來？"><a href="#剪刀哪裡來？" class="headerlink" title="剪刀哪裡來？"></a>剪刀哪裡來？</h2><p>目前最好最精準的剪刀是CRISPR，來自細菌的免疫系統<br></p>
+<ul>
+<li>1987年，日本科學家在細菌中發現一段奇怪的規律序列，用途不明</li>
+<li>過了很久之後，科學家發現這些序列是用來記錄來犯的病毒！！</li>
+</ul>
+<h3 id="細菌的病毒？"><a href="#細菌的病毒？" class="headerlink" title="細菌的病毒？"></a>細菌的病毒？</h3><p>細菌遇到病毒怎麼可能讓他「打進來」呢？</p>
+<h4 id="細菌的防衛機制"><a href="#細菌的防衛機制" class="headerlink" title="細菌的防衛機制"></a>細菌的防衛機制</h4><ul>
+<li>細菌在被病毒打進DNA後，細菌會將病毒的DNA剪碎，插入自己的CRISPR內</li>
+<li>下次病毒再入侵的時候，細菌會以原本的DNA片段當模板</li>
+<li>複製一條RNA給Cas9，去檢查是不是一樣的病毒，是的話就直接剪掉</li>
+</ul>
+<p><del>病毒成功的被細菌「拉進來打出去」</del></p>
+<h2 id="好剪刀，不用嗎"><a href="#好剪刀，不用嗎" class="headerlink" title="好剪刀，不用嗎"></a>好剪刀，不用嗎</h2><ul>
+<li>利用跟要剪的部分的互補RNA讓Cas9附著，讓Cas9剪開目標</li>
+<li>DNA本身就有自動修復的能力，所以只要送入正確的基因就有機會黏在斷口處</li>
+</ul>
+<h2 id="好技術就可以發大財啦，我要專利！"><a href="#好技術就可以發大財啦，我要專利！" class="headerlink" title="好技術就可以發大財啦，我要專利！"></a>好技術就可以發大財啦，我要專利！</h2><h3 id="美國戰場"><a href="#美國戰場" class="headerlink" title="美國戰場"></a>美國戰場</h3><ul>
+<li>原本CRISPR-Cas9的專利是加州大學柏克萊分校的珍妮佛的團隊首先申請（2012/5）</li>
+<li>後來哈佛與麻省理工，以張鋒為首的團隊，強調在真核細胞切割（2012/12）</li>
+<li>但張鋒利用加速審查制度，先行註冊</li>
+<li>但珍妮佛的團隊申請時間適用舊法，即發明人擁有專利</li>
+<li>張鋒贏了，珍妮佛的案子仍在審</li>
+</ul>
+<h3 id="歐洲戰場"><a href="#歐洲戰場" class="headerlink" title="歐洲戰場"></a>歐洲戰場</h3><ul>
+<li>張鋒先申請</li>
+<li>但歐洲有9個月的異議時間，目前能在審</li>
+</ul>
+<h3 id="張鋒"><a href="#張鋒" class="headerlink" title="張鋒"></a>張鋒</h3><ul>
+<li>光遺傳技術</li>
+</ul>
+<h1 id="所以這個可以幹嘛？"><a href="#所以這個可以幹嘛？" class="headerlink" title="所以這個可以幹嘛？"></a>所以這個可以幹嘛？</h1><ol>
+<li>古生物復活<ul>
+<li>目前已有冷凍16年的小鼠復活的例子</li>
+<li>猛獁象和亞洲陸象：基因差異只有4%，將差異的部分編輯後即可復活</li>
+<li>恐龍：從琥珀中的蚊子血液抽取DNA，尋找代理孕母並編輯基因</li>
+</ul>
+</li>
+<li>治療疾病<ul>
+<li>有時候會脫靶（剪錯地方），可能產生無法預期的變異</li>
+<li>人類有65億個鹼基序列，但Cas9能辨認的只有23個，統計上至少需要28個，所以也可能找到很像但不一樣的</li>
+<li>希望能找到不會有脫靶效應的蛋白</li>
+<li>目前比較有可能的作法：</li>
+<li>先取出之後修改，定序之後確定沒問題再放回去</li>
+<li>可以取出的細胞只有血液中的免疫細胞</li>
+<li>美國2019批准</li>
+<li>目前所有治療都在一期或二期，沒有副作用但不確定效用</li>
+</ul>
+</li>
+<li>器官移植<ul>
+<li>利用體細胞重新分化成多功能分化性幹細胞</li>
+<li>對幹細胞基因編輯，相容於某種動物</li>
+<li>用動物生產器官，進入人體也不會排斥</li>
+</ul>
+</li>
+<li>糧食問題<ul>
+<li>全球暖化和氣候變遷引發植物病蟲害</li>
+<li>利用基因編輯技術直接對目標基因做編輯，而不是插入外部基因</li>
+<li>抗旱、多產…</li>
+</ul>
+</li>
+<li>道德爭議<ul>
+<li>脫靶效應若產出突變物，可能會干擾生態</li>
+<li>CRISPR的高利潤，使得大部分技術都保密不公開</li>
+<li>使用大量農藥等有毒物質，危害環境</li>
+<li>對人體未知的危害</li>
+<li>復育絕種動物皆為滿足人的慾望，違反實驗動物福祉3R</li>
+<li>基因編輯對人體專一，費用龐大，使得醫療更商業化</li>
+<li>改造人、改造嬰兒、強化士兵等道德爭議</li>
+</ul>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AA%B2%E5%A0%82%E7%AD%86%E8%A8%98-%E7%94%9F%E5%91%BD%E7%A7%91%E5%AD%B8/" rel="tag"># 課堂筆記, 生命科學</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/%E8%B3%87%E6%96%99%E7%B5%90%E6%A7%8B/2020/01/09/heap.html" rel="next" title="heap與priority queue(上)：插入">
+      heap與priority queue(上)：插入 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基因編輯"><span class="nav-number">1.</span> <span class="nav-text">基因編輯</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#起源：DNA"><span class="nav-number">1.1.</span> <span class="nav-text">起源：DNA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#剪刀哪裡來？"><span class="nav-number">1.2.</span> <span class="nav-text">剪刀哪裡來？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#細菌的病毒？"><span class="nav-number">1.2.1.</span> <span class="nav-text">細菌的病毒？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#細菌的防衛機制"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">細菌的防衛機制</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#好剪刀，不用嗎"><span class="nav-number">1.3.</span> <span class="nav-text">好剪刀，不用嗎</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#好技術就可以發大財啦，我要專利！"><span class="nav-number">1.4.</span> <span class="nav-text">好技術就可以發大財啦，我要專利！</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#美國戰場"><span class="nav-number">1.4.1.</span> <span class="nav-text">美國戰場</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#歐洲戰場"><span class="nav-number">1.4.2.</span> <span class="nav-text">歐洲戰場</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#張鋒"><span class="nav-number">1.4.3.</span> <span class="nav-text">張鋒</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#所以這個可以幹嘛？"><span class="nav-number">2.</span> <span class="nav-text">所以這個可以幹嘛？</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Edward</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Edward</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 強力驅動 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主題 – <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

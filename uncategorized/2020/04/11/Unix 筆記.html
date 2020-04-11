@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://wei-coding.github.io').hostname,
+    root: '/',
+    scheme: 'Mist',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="Unix 筆記Ch1OS是什麼? 電腦系統:app,softwarelib,system calls,program generation tool  fairness single user:Doesn’t matter multi:資源分配，security  Layer   Users    AUI:Unix shell,commands,app   API:Language libs,sy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unix 筆記">
+<meta property="og:url" content="https://wei-coding.github.io/uncategorized/2020/04/11/Unix%20%E7%AD%86%E8%A8%98.html">
+<meta property="og:site_name" content="小瑋的小小天地">
+<meta property="og:description" content="Unix 筆記Ch1OS是什麼? 電腦系統:app,softwarelib,system calls,program generation tool  fairness single user:Doesn’t matter multi:資源分配，security  Layer   Users    AUI:Unix shell,commands,app   API:Language libs,sy">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://wei-coding.github.io/uncategorized/2020/04/11/assets/image-20200410155358309.png">
+<meta property="og:image" content="https://wei-coding.github.io/uncategorized/2020/04/11/assets/image-20200411122430541.png">
+<meta property="article:published_time" content="2020-04-11T14:02:47.052Z">
+<meta property="article:modified_time" content="2020-04-11T14:02:47.052Z">
+<meta property="article:author" content="Edward">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wei-coding.github.io/uncategorized/2020/04/11/assets/image-20200410155358309.png">
+
+<link rel="canonical" href="https://wei-coding.github.io/uncategorized/2020/04/11/Unix%20%E7%AD%86%E8%A8%98.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Unix 筆記 | 小瑋的小小天地</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">小瑋的小小天地</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">人生得意需盡歡，莫使電腦白空轉</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>歸檔</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://wei-coding.github.io/uncategorized/2020/04/11/Unix%20%E7%AD%86%E8%A8%98.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Edward">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小瑋的小小天地">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Unix 筆記
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2020-04-11 22:02:47" itemprop="dateCreated datePublished" datetime="2020-04-11T22:02:47+08:00">2020-04-11</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Unix-筆記"><a href="#Unix-筆記" class="headerlink" title="Unix 筆記"></a>Unix 筆記</h1><h2 id="Ch1"><a href="#Ch1" class="headerlink" title="Ch1"></a>Ch1</h2><h3 id="OS是什麼"><a href="#OS是什麼" class="headerlink" title="OS是什麼?"></a>OS是什麼?</h3><blockquote>
+<p>電腦系統:app,software<br>lib,system calls,program generation tool</p>
+</blockquote>
+<h4 id="fairness"><a href="#fairness" class="headerlink" title="fairness"></a>fairness</h4><ol>
+<li>single user:Doesn’t matter</li>
+<li>multi:資源分配，security</li>
+</ol>
+<h4 id="Layer"><a href="#Layer" class="headerlink" title="Layer"></a>Layer</h4><table>
+<thead>
+<tr>
+<th align="center">Users</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">AUI:Unix shell,commands,app</td>
+</tr>
+<tr>
+<td align="center">API:Language libs,system call</td>
+</tr>
+<tr>
+<td align="center">OS Kernel</td>
+</tr>
+<tr>
+<td align="center">Hardware</td>
+</tr>
+</tbody></table>
+<h4 id="Top-down-View"><a href="#Top-down-View" class="headerlink" title="Top down View"></a>Top down View</h4><ul>
+<li>a software handle all hardware resource</li>
+<li>no needs to worry about low-level things</li>
+<li>ex: <code>cp memo letter</code><ul>
+<li>no needs to worry:</li>
+<li>the location of the file on the hard disk</li>
+<li>size of disk,brand of disk…</li>
+</ul>
+</li>
+</ul>
+<h4 id="Bottom-up-View"><a href="#Bottom-up-View" class="headerlink" title="Bottom up View"></a>Bottom up View</h4><ul>
+<li>a software (de)allocates all system resource</li>
+<li>ex:<ul>
+<li>only one file can be printed by a printer</li>
+<li>preventing from overrides others’ files on disk</li>
+</ul>
+</li>
+</ul>
+<h4 id="OS-Services"><a href="#OS-Services" class="headerlink" title="OS Services"></a>OS Services</h4><ul>
+<li>resource manager</li>
+<li>provides many read-made services</li>
+</ul>
+<h3 id="GUI-V-S-CLI"><a href="#GUI-V-S-CLI" class="headerlink" title="GUI V.S. CLI"></a>GUI V.S. CLI</h3><table>
+<thead>
+<tr>
+<th align="center">GUI</th>
+<th align="center">CLI(CUI)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Most OS have both</td>
+<td align="center">Most OS have both</td>
+</tr>
+<tr>
+<td align="center">Win,Mac OS… primarily offered</td>
+<td align="center">Can enter by terminal screen</td>
+</tr>
+<tr>
+<td align="center">easy to use</td>
+<td align="center">flexiablity</td>
+</tr>
+</tbody></table>
+<h3 id="user-and-process-categorize"><a href="#user-and-process-categorize" class="headerlink" title="user and process categorize"></a>user and process categorize</h3><ul>
+<li>Single-user,Single-process<ul>
+<li>one process at a time</li>
+<li>ex: early Mac OS,DOS,Win</li>
+</ul>
+</li>
+<li>Single-user,Multi-process<ul>
+<li>ex: OS/2 Win XP Workstation,batch OS</li>
+</ul>
+</li>
+<li>Multi-user,Multi-process<ul>
+<li>ex: Unix,Linux,Win NT(Server),VM</li>
+<li>increased system throughput</li>
+<li>multiprogramming</li>
+</ul>
+</li>
+</ul>
+<p>For each type of OS:</p>
+<ul>
+<li>single-process system:<ul>
+<li>use all power</li>
+</ul>
+</li>
+<li>Interactive<ul>
+<li>allow users to interact with their executing prog.</li>
+</ul>
+</li>
+<li>Batch os<ul>
+<li>useful when programs are run without human’s instruction</li>
+<li>Almost all os are interactive</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Unix allow programs run in batch mode.</p>
+</blockquote>
+<ul>
+<li>Time-sharing system<ul>
+<li>multiuser+multiprocess+interactive</li>
+</ul>
+</li>
+</ul>
+<h2 id="Ch2"><a href="#Ch2" class="headerlink" title="Ch2"></a>Ch2</h2><blockquote>
+<p>各種指令來啦!</p>
+</blockquote>
+<ul>
+<li><code>cat</code><ul>
+<li>conncatenate</li>
+<li>創建新檔、瀏覽檔案…</li>
+<li><code>cat &gt; myfile</code></li>
+<li><code>This is ......(一些文字)</code></li>
+<li><code>&lt;Ctrl+D&gt;</code></li>
+</ul>
+</li>
+<li><code>more</code><ul>
+<li>顯示檔案內容</li>
+<li><code>more myfile</code></li>
+</ul>
+</li>
+<li><code>cp</code><ul>
+<li>copy</li>
+<li><code>cp myfile myfile2</code></li>
+</ul>
+</li>
+<li><code>mv</code><ul>
+<li>move</li>
+<li>可以用來重新命名</li>
+<li><code>mv myfile2 renamed_file</code></li>
+<li><code>mv myfile ..</code></li>
+</ul>
+</li>
+</ul>
+<p><strong>不要亂用空白當檔名</strong></p>
+<ul>
+<li><p><code>mv &quot;the file has space.txt&quot; file.txt</code></p>
+</li>
+<li><p><code>rm</code></p>
+<ul>
+<li>remove</li>
+<li><code>rm renamed_file</code></li>
+<li><code>rm -r</code>(recursivly remove)</li>
+</ul>
+</li>
+<li><p><code>ls</code></p>
+<ul>
+<li>list</li>
+<li>顯示所有檔案</li>
+<li><code>ls -la</code> 含詳細資訊</li>
+<li><code>ls -la myfile</code></li>
+</ul>
+</li>
+<li><p><code>mkdir</code></p>
+<ul>
+<li>make directory</li>
+<li>建立資料夾</li>
+<li><code>mkdir first</code></li>
+</ul>
+</li>
+<li><p><code>cd</code></p>
+<ul>
+<li><code>cd  first</code></li>
+</ul>
+</li>
+<li><p><code>pwd</code></p>
+<ul>
+<li>顯示現在的資料夾</li>
+</ul>
+</li>
+<li><p><code>rmdir</code></p>
+<ul>
+<li>remove directory</li>
+<li><code>rmdir first</code></li>
+</ul>
+</li>
+<li><p><code>man</code></p>
+<ul>
+<li>線上找尋指令說明</li>
+<li><code>man -k</code>：關鍵字找尋</li>
+<li><code>man -S2</code>：找特定section</li>
+</ul>
+</li>
+<li><p><code>whatis</code></p>
+</li>
+<li><p><code>whereis</code></p>
+</li>
+<li><p><code>whoami</code></p>
+</li>
+<li><p><code>hostname</code></p>
+</li>
+<li><p><code>lpr</code></p>
+<ul>
+<li><code>lpr -Pspr order.eps</code></li>
+</ul>
+</li>
+<li><p><code>cal</code></p>
+<ul>
+<li><code>cal 4 2020</code></li>
+</ul>
+</li>
+<li><p><code>write</code></p>
+<ul>
+<li><code>write username [terminal]</code></li>
+</ul>
+</li>
+<li><p><code>who</code></p>
+</li>
+<li><p><code>mesg</code></p>
+<ul>
+<li><code>mesg y/n</code>同意傳訊</li>
+</ul>
+</li>
+<li><p><code>biff</code></p>
+<ul>
+<li><code>biff y/n</code> email訊息通知</li>
+</ul>
+</li>
+<li><p><code>alias</code></p>
+<ul>
+<li><code>alias [name [=string]]</code>：bsh,ksh,bash</li>
+<li><code>alias [name [string]]</code>：csh</li>
+<li>in .profile or .login</li>
+<li>.bashrc for bash in Solaris</li>
+<li>.cshrc for csh in BSD</li>
+</ul>
+</li>
+<li><p>pipeline</p>
+<ul>
+<li><code>alias ls -more &#39;ls \!*|more&#39;</code> means<br><code>ls-more /etc/usr == ls /etc/usr | more</code></li>
+<li><code>alias ls-more &#39;ls|more&#39;</code>means<br><code>ls-more /etc/usr == ls|more /etc/usr</code></li>
+</ul>
+</li>
+<li><p><code>unalias</code></p>
+</li>
+</ul>
+<h3 id="Shell"><a href="#Shell" class="headerlink" title="Shell"></a>Shell</h3><ul>
+<li>檢查安裝的shell</li>
+<li>echo $SHELL</li>
+<li>system start-up file<ul>
+<li>.profile in Solaris</li>
+<li>.login in BSD</li>
+</ul>
+</li>
+<li>shell start-up file<ul>
+<li>.cshrc</li>
+<li>.bashrc</li>
+</ul>
+</li>
+<li><code>sudo</code></li>
+<li><code>su</code></li>
+</ul>
+<h2 id="Ch3"><a href="#Ch3" class="headerlink" title="Ch3"></a>Ch3</h2><h4 id="vi"><a href="#vi" class="headerlink" title="vi"></a>vi</h4><ul>
+<li><p>一般編輯</p>
+<ul>
+<li><code>vi file1</code></li>
+<li><code>A</code></li>
+<li>打字</li>
+<li>按<code>&lt;esc&gt;</code></li>
+<li>打<code>:wq</code>即可退出vi</li>
+</ul>
+</li>
+<li><p>vi 的一些特點：</p>
+<ul>
+<li>有模式之分：insert mode and command mode</li>
+<li>通常vi,vim,gvim都內附在系統中了</li>
+</ul>
+</li>
+<li><p>寫Shell Script</p>
+<ul>
+<li>就是連續執行很多指令而已</li>
+<li><code>sh scriptfile</code></li>
+</ul>
+</li>
+<li><p>vi 架構</p>
+<ul>
+<li><img src="assets/image-20200410155358309.png" alt="image-20200410155358309"></li>
+</ul>
+</li>
+<li><p>command</p>
+<ul>
+<li>標準語法為：<code>[#1] operation [#2] target</code><br>  #1,#2為選擇性輸入，#1為次數，#2為影響target個數</li>
+<li><code>dd</code>：刪除整行</li>
+<li><code>cw</code>：change current word</li>
+<li><code>cc</code>：change line</li>
+<li><code>C</code> or <code>c$</code>：change text from now to end of line</li>
+<li><code>7 dd</code>：del 7 lines</li>
+<li><code>d/ pat</code>：del up to first pattern</li>
+<li><code>r x</code>：replace the current text to x</li>
+<li><code>R text</code>：replace begin at cursor</li>
+<li><code>s</code>：substitute</li>
+<li><code>u</code>：undo</li>
+<li><code>x</code>：del</li>
+</ul>
+</li>
+<li><p>last line mode command</p>
+<ul>
+<li><code>:n,m w file</code>n到m行寫入</li>
+<li><code>:n,m w &gt;&gt; file</code> n到m行加入</li>
+<li><code>:wq</code></li>
+<li><code>:w[!] [filename]</code></li>
+<li><code>:w %.new</code> %代表原檔案名</li>
+<li><code>:q[!]</code></li>
+</ul>
+</li>
+<li><p>move cursor with h,j,k,l,(上下左右)</p>
+</li>
+<li><p>cursor moving</p>
+<ul>
+<li><code>1G</code> 移動到第一行</li>
+<li><code>G</code> 移到最後一行</li>
+<li><code>0</code> 相當於home鍵</li>
+<li><code>&lt;ctrl+g&gt;</code> 游標在檔案的位置訊息</li>
+<li><code>$</code> 相當於end鍵</li>
+<li><code>w</code> 往前</li>
+<li><code>b</code> 往後</li>
+</ul>
+</li>
+<li><p>copy and paste</p>
+<ul>
+<li><strong>yank</strong> and <strong>put</strong></li>
+<li><code>y2W</code> yank two words</li>
+<li><code>4yb</code> yank 4 words backward</li>
+<li><code>yy</code> yank whole line</li>
+<li><code>ye</code> 複製到行底</li>
+<li><code>yw</code> 複製到行底＋空白</li>
+<li><code>p</code> put after</li>
+<li><code>P</code> put before</li>
+<li><code>J</code> 插入一行</li>
+</ul>
+</li>
+<li><p>substitute</p>
+<ul>
+<li><strong>Search</strong> and <strong>Replace</strong></li>
+<li><code>:[range]s/pattern/string[/options][count]</code></li>
+</ul>
+</li>
+<li><p>vim</p>
+<ul>
+<li>vim設定檔<code>~/.vimrc</code></li>
+<li><code>:split [filename]</code> 可以分割視窗</li>
+<li><code>&lt;ctrl+w&gt; Up</code> 移動到上方視窗</li>
+<li>undo：<code>3u</code> undo 3次</li>
+<li><code>&lt;ctrl+R&gt;</code> ：redo</li>
+<li></li>
+</ul>
+</li>
+</ul>
+<h2 id="Ch4：file-system"><a href="#Ch4：file-system" class="headerlink" title="Ch4：file system"></a>Ch4：file system</h2><ul>
+<li>Unix 把所有東西都視為檔案</li>
+<li>NIC,hard disk,USB,keboard,printer,傳統檔案…</li>
+<li>Unix 的七種檔案類型<ul>
+<li>Simple/ordinary file</li>
+<li>Dir</li>
+<li>Symbolic link(類似Windows的捷徑)</li>
+<li>Character special file</li>
+<li>Block special file</li>
+<li>Named pipe (FIFO)</li>
+<li>Socket</li>
+</ul>
+</li>
+<li>強烈建議不要使用空白當檔名</li>
+<li>file extensions mean nothing to Unix system</li>
+</ul>
+<h4 id="Directory"><a href="#Directory" class="headerlink" title="Directory"></a>Directory</h4><ul>
+<li><p>資料夾基本架構</p>
+</li>
+<li><p><img src="assets/image-20200411122430541.png" alt="image-20200411122430541"></p>
+</li>
+<li><p><strong>inode number</strong> is 4 bytes long,as index for an array on the disk</p>
+</li>
+<li><p>每個檔案都有自己的<strong>inode</strong></p>
+</li>
+</ul>
+<h4 id="Link-File"><a href="#Link-File" class="headerlink" title="Link File"></a>Link File</h4><ul>
+<li><strong>Points to</strong> an exsiting file</li>
+</ul>
+<h4 id="Special-or-Device-File"><a href="#Special-or-Device-File" class="headerlink" title="Special(or Device) File"></a>Special(or Device) File</h4><ul>
+<li>Used to access hardware devices</li>
+<li>Each hardware is associated with at least one spcial file</li>
+<li>two type<ul>
+<li>Charater special files<ul>
+<li>和字元裝置有關，如鍵盤</li>
+</ul>
+</li>
+<li>Block special files<ul>
+<li>和區塊裝置有關，如硬碟</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>讓應用程式能以跟存取檔案相同的方法存取裝置</li>
+<li>也有一些模擬物理裝置的出現(<strong>psedodevices</strong>)，讓我們可以從遠端登入到系統(模擬鍵盤、滑鼠等)</li>
+</ul>
+<h4 id="Named-Pipe-FIFO"><a href="#Named-Pipe-FIFO" class="headerlink" title="Named Pipe(FIFO)"></a>Named Pipe(FIFO)</h4><ul>
+<li>Unix 中有一些工具可以讓程序之間溝通</li>
+<li>pipe 就是kernal memory中可以讓程序間溝通的地方</li>
+</ul>
+<h4 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h4><blockquote>
+<p>計網講過了</p>
+</blockquote>
+<ul>
+<li>process communicate through network</li>
+<li>ex : App layer such as HTTP use socket for communication</li>
+<li><code>AF_INET</code> : internet domain socket</li>
+<li><code>AF_UNIX</code> : same machine under Unix , called Unix domain socket</li>
+</ul>
+<h3 id="標準資料夾介紹"><a href="#標準資料夾介紹" class="headerlink" title="標準資料夾介紹"></a>標準資料夾介紹</h3><h4 id="Root"><a href="#Root" class="headerlink" title="Root(/)"></a>Root(/)</h4><ul>
+<li>top of the file system</li>
+</ul>
+<h4 id="bin"><a href="#bin" class="headerlink" title="/bin"></a>/bin</h4><ul>
+<li>store most Unix programs or commands</li>
+<li>On BSD,<code>/usr/bin</code> is diff from /bin</li>
+<li>On Solaris , they are linked.</li>
+</ul>
+<h4 id="boot"><a href="#boot" class="headerlink" title="/boot"></a>/boot</h4><ul>
+<li>開機相關檔案，很重要</li>
+</ul>
+<h4 id="dev"><a href="#dev" class="headerlink" title="/dev"></a>/dev</h4><ul>
+<li>各種裝置</li>
+</ul>
+<h4 id="etc"><a href="#etc" class="headerlink" title="/etc"></a>/etc</h4><ul>
+<li>通常存放系統管理或設置scripts or file</li>
+</ul>
+<h4 id="lib"><a href="#lib" class="headerlink" title="/lib"></a>/lib</h4><ul>
+<li>程式語言的library</li>
+</ul>
+<h4 id="tmp"><a href="#tmp" class="headerlink" title="/tmp"></a>/tmp</h4><ul>
+<li>暫存檔，不解釋</li>
+</ul>
+<h4 id="usr"><a href="#usr" class="headerlink" title="/usr"></a>/usr</h4><ul>
+<li>utilies,system deamons,app,programming tool,standard c lib,language lib,manual page…</li>
+<li><strong>/usr/bin</strong></li>
+<li><strong>/usr/lib</strong></li>
+</ul>
+<h4 id="usr-home"><a href="#usr-home" class="headerlink" title="/usr/home"></a>/usr/home</h4><ul>
+<li>hold all user’s  home directories</li>
+<li>子資料夾可以用來分types</li>
+<li>for example ：<code>/usr/home/admin</code>,<code>/usr/home/faculty</code>,<code>/usr/home/students</code></li>
+<li>有些系統會鍵一個link：<code>/home -&gt; /usr/home</code></li>
+<li>在Ubuntu 18.04下，已經沒有<code>/usr/home</code>了，直接移入<code>/</code>而成<code>/home</code></li>
+</ul>
+<h4 id="var"><a href="#var" class="headerlink" title="/var"></a>/var</h4><ul>
+<li>contains log,temporary,spool files</li>
+<li><code>/var/mail</code> may contains the mails you have recived</li>
+<li><code>/var/spool/mqueue</code> contains undelivered mail queue</li>
+<li><code>/var/spool/output</code> contains the line printer spooling dir</li>
+<li><code>/var/tmp</code> keep temp files kept between system reboots</li>
+</ul>
+<h4 id="etc-passwd"><a href="#etc-passwd" class="headerlink" title="/etc/passwd"></a>/etc/passwd</h4><ul>
+<li>contain every user on the system</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/%E8%B3%87%E6%96%99%E7%B5%90%E6%A7%8B/2020/01/09/heap.html" rel="prev" title="heap與priority queue(上)：插入">
+      <i class="fa fa-chevron-left"></i> heap與priority queue(上)：插入
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Unix-筆記"><span class="nav-number">1.</span> <span class="nav-text">Unix 筆記</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Ch1"><span class="nav-number">1.1.</span> <span class="nav-text">Ch1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#OS是什麼"><span class="nav-number">1.1.1.</span> <span class="nav-text">OS是什麼?</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#fairness"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">fairness</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Layer"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">Layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Top-down-View"><span class="nav-number">1.1.1.3.</span> <span class="nav-text">Top down View</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Bottom-up-View"><span class="nav-number">1.1.1.4.</span> <span class="nav-text">Bottom up View</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#OS-Services"><span class="nav-number">1.1.1.5.</span> <span class="nav-text">OS Services</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GUI-V-S-CLI"><span class="nav-number">1.1.2.</span> <span class="nav-text">GUI V.S. CLI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#user-and-process-categorize"><span class="nav-number">1.1.3.</span> <span class="nav-text">user and process categorize</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ch2"><span class="nav-number">1.2.</span> <span class="nav-text">Ch2</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Shell"><span class="nav-number">1.2.1.</span> <span class="nav-text">Shell</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ch3"><span class="nav-number">1.3.</span> <span class="nav-text">Ch3</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#vi"><span class="nav-number">1.3.0.1.</span> <span class="nav-text">vi</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ch4：file-system"><span class="nav-number">1.4.</span> <span class="nav-text">Ch4：file system</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Directory"><span class="nav-number">1.4.0.1.</span> <span class="nav-text">Directory</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Link-File"><span class="nav-number">1.4.0.2.</span> <span class="nav-text">Link File</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Special-or-Device-File"><span class="nav-number">1.4.0.3.</span> <span class="nav-text">Special(or Device) File</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Named-Pipe-FIFO"><span class="nav-number">1.4.0.4.</span> <span class="nav-text">Named Pipe(FIFO)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Socket"><span class="nav-number">1.4.0.5.</span> <span class="nav-text">Socket</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#標準資料夾介紹"><span class="nav-number">1.4.1.</span> <span class="nav-text">標準資料夾介紹</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Root"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">Root(&#x2F;)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bin"><span class="nav-number">1.4.1.2.</span> <span class="nav-text">&#x2F;bin</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#boot"><span class="nav-number">1.4.1.3.</span> <span class="nav-text">&#x2F;boot</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dev"><span class="nav-number">1.4.1.4.</span> <span class="nav-text">&#x2F;dev</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#etc"><span class="nav-number">1.4.1.5.</span> <span class="nav-text">&#x2F;etc</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#lib"><span class="nav-number">1.4.1.6.</span> <span class="nav-text">&#x2F;lib</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tmp"><span class="nav-number">1.4.1.7.</span> <span class="nav-text">&#x2F;tmp</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#usr"><span class="nav-number">1.4.1.8.</span> <span class="nav-text">&#x2F;usr</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#usr-home"><span class="nav-number">1.4.1.9.</span> <span class="nav-text">&#x2F;usr&#x2F;home</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#var"><span class="nav-number">1.4.1.10.</span> <span class="nav-text">&#x2F;var</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#etc-passwd"><span class="nav-number">1.4.1.11.</span> <span class="nav-text">&#x2F;etc&#x2F;passwd</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Edward</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Edward</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 強力驅動 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主題 – <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

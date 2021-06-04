@@ -1,10 +1,14 @@
 language: node_js
+node_js:
+  - '12'
 sudo: false
 branches:
   only:
     - master
 cache:
-  - npm
+  apt: true
+  directories:
+    - node_modules
 before_script:
   - npm install hexo-cli -g
   - git clone https://github.com/theme-next/hexo-theme-next.git themes/next

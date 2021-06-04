@@ -6,8 +6,7 @@ branches:
 cache:
   - npm
 before_script:
-  - npm install
-  - hexo cl
+  - npm install hexo-cli -g
   - git clone https://github.com/theme-next/hexo-theme-next.git themes/next
 script:
   - hexo generate
